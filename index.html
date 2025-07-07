@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
+    <body onload="fetchContacts()">
+       
+        <div id="table">contacts loading...</div>
+        <button id="refresh" type="button">Refresh</button>
+        <button id="addcontact" type="button">Add Contact</button>
+
+        <script src="config.js"></script>
+        <script>
+            document.getElementById("refresh").addEventListener('click', fetchContacts);
+            document.getElementById("addcontact").addEventListener('click', addContact);
+            //function to retrieve all the contacts from the database
+             function fetchContacts(){
+                fetch(rootPath + "controller/get-contacts/")
+                .then(function(response){
+                    return response.json();
+                })
+                .then(function(data){
+                    displayOutput(data);
+                    //console.log(data);
+                })
+            }
+                //function to display data on the form
+            function displayOutput(data){
+                output = "<table>";
+
+                    for(a in data){
+                        output += `
+                    <tr onclick="editContact(${data[a].id})">
+                     <td><img src="${rootPath}controller/uploads/${data[a].avatar}" width="40"/></td>
+                     <td><h5>${data[a].firstname}</h5></td>
+                     <td><h5>${data[a].lastname}</h5></td>   
+                    </tr>
+                       `  
+                    }
+                  output += "</table>";
+                 document.getElementById("table").innerHTML = output; 
+            }
+            //function for addcontact button
+            function addContact(){
+                window.open("add-contact.html", "_self");
+            }
+            //Function for edit contact button
+            function editContact(id){
+                window.open("edit-contact.html?id=" + id, "_self");
+            }
+           
+        </script>
+    </body>
+</html>
